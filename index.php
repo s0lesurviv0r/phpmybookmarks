@@ -144,7 +144,7 @@
 <?php if(Config::$show_version) { ?>
 	<footer class="center">
 		<small>
-			<a href="#">phpMyBookmarks</a> 
+			<a href="https://github.com/jacobzelek/phpmybookmarks">phpMyBookmarks</a> 
 			v.<?php echo Version::to_string(); ?>
 		</small>
 	</footer>

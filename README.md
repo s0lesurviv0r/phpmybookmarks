@@ -8,6 +8,13 @@ Status
 
 This application is under heavy development and should not be put in a production environment.
 
+Demo
+----
+
+A demo is available at http://demos.jacobzelek.com/phpmybookmarks
+
+This is a public user version. Config::$auth is set to "none".
+
 Installation
 ------------
 
