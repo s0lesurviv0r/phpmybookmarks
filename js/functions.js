@@ -28,7 +28,10 @@ Array.prototype.in_array = function(value, caseSensitive)
 	return false;
 };
 
-//Array Remove - By John Resig (MIT Licensed)
+/*
+ * @author John Resig
+ * @license MIT
+ */
 Array.prototype.remove = function(from, to)
 {
 	var rest = this.slice((to || from) + 1 || this.length);

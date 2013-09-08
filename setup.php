@@ -1,59 +1,79 @@
 <?php
-	session_start();
-	
-	require_once "config.inc.php";
-	require_once "user.inc.php";
-	
-	$error = "";
-	
-	/*
-	 * If configuration requires user authentication
-	 * and no users exist
-	 */ 
-	if(!User::users_exist() &&
-			Config::$auth == "user")
-	{	
-		// If new user details are provided
-		if(isset($_POST["email"]) &&
-			isset($_POST["pass"]) &&
-			isset($_POST["pass_confirm"]))
+
+/*
+phpmybookmarks
+Copyright (C) 2013  Jacob Zelek
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
+
+session_start();
+
+require_once "config.inc.php";
+require_once "user.inc.php";
+
+$error = "";
+
+/*
+ * If configuration requires user authentication
+ * and no users exist
+ */ 
+if(!User::users_exist() &&
+		Config::$auth == "user")
+{	
+	// If new user details are provided
+	if(isset($_POST["email"]) &&
+		isset($_POST["pass"]) &&
+		isset($_POST["pass_confirm"]))
+	{
+		$email = $_POST["email"];
+		$pass = $_POST["pass"];
+		$pass_confirm = $_POST["pass_confirm"];
+		
+		if($pass == $pass_confirm)
 		{
-			$email = $_POST["email"];
-			$pass = $_POST["pass"];
-			$pass_confirm = $_POST["pass_confirm"];
-			
-			if($pass == $pass_confirm)
+			if(filter_var($email, FILTER_VALIDATE_EMAIL))
 			{
-				if(filter_var($email, FILTER_VALIDATE_EMAIL))
+				if(User::add_user($email, $pass))
 				{
-					if(User::add_user($email, $pass))
-					{
-						header("Location: index.php");
-					}
-					else
-					{
-						$error = "<div class=\"alert alert-error\">" .
-								"User could not be added! Possible " .
-								"database problem.</div>";
-					}
+					header("Location: index.php");
 				}
 				else
 				{
 					$error = "<div class=\"alert alert-error\">" .
-							"Email is invalid!</div>";
+							"User could not be added! Possible " .
+							"database problem.</div>";
 				}
 			}
 			else
 			{
 				$error = "<div class=\"alert alert-error\">" .
-						"Passwords don't match!</div>";
+						"Email is invalid!</div>";
 			}
 		}
+		else
+		{
+			$error = "<div class=\"alert alert-error\">" .
+					"Passwords don't match!</div>";
+		}
 	}
-	else
-	{
-		header("Location: index.php");
-	}
+}
+else
+{
+	header("Location: index.php");
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -1,52 +1,72 @@
 <?php
-	session_start();
+
+/*
+ phpmybookmarks
+Copyright (C) 2013  Jacob Zelek
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
+
+session_start();
+
+require_once "config.inc.php";
+require_once "user.inc.php";
+
+/*
+ * If configuration requires user authentication
+* and no users exist
+*/
+if(!User::users_exist() &&
+		Config::$auth == "user")
+{
+	header("Location: setup.php");
+}
+
+/*
+ * If configuration requires user authentication
+ * and user is not logged in
+ */ 
+if(!User::is_logged_in())
+{
+	$error = false;
 	
-	require_once "config.inc.php";
-	require_once "user.inc.php";
-	
-	/*
-	 * If configuration requires user authentication
-	* and no users exist
-	*/
-	if(!User::users_exist() &&
-			Config::$auth == "user")
+	// If login details are provided
+	if(isset($_POST["email"]) &&
+		isset($_POST["pass"]))
 	{
-		header("Location: setup.php");
-	}
-	
-	/*
-	 * If configuration requires user authentication
-	 * and user is not logged in
-	 */ 
-	if(!User::is_logged_in())
-	{
-		$error = false;
+		$uid = User::is_valid($_POST["email"], $_POST["pass"]);
 		
-		// If login details are provided
-		if(isset($_POST["email"]) &&
-			isset($_POST["pass"]))
+		if($uid != false)
 		{
-			$uid = User::is_valid($_POST["email"], $_POST["pass"]);
-			
-			if($uid != false)
-			{
-				User::log_in($uid);
-			}
-			else
-			{
-				$error = "<div class=\"alert alert-error\">" .
-							"Invalid Username or Password!</div>";
-			}
+			User::log_in($uid);
+		}
+		else
+		{
+			$error = "<div class=\"alert alert-error\">" .
+						"Invalid Username or Password!</div>";
 		}
 	}
-	else
+}
+else
+{
+	if(isset($_GET["log_out"]))
 	{
-		if(isset($_GET["log_out"]))
-		{
-			User::log_out();
-			header("Location: index.php");
-		}
+		User::log_out();
+		header("Location: index.php");
 	}
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
