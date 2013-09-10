@@ -164,7 +164,7 @@ if(User::is_logged_in())
 	else if($_REQUEST["action"] == "get_bookmarks")
 	{
 		$search = (isset($_REQUEST["search"])) ? $_REQUEST["search"] : "";
-		$limit = (isset($_REQUEST["limit"])) ? $_REQUEST["limit"] : 100;
+		$limit = (isset($_REQUEST["limit"])) ? intval($_REQUEST["limit"]) : 100;
 		$tags = (isset($_REQUEST["tags"]) && !empty($_REQUEST["tags"]))
 				? preg_split("/\:/", $_REQUEST["tags"]) : array();
 		

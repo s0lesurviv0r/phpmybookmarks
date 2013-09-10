@@ -89,7 +89,6 @@ class Bookmarks
 		$bookmarks = array();
 		
 		$count = 0;
-		$more_data = false;
 		
 		foreach($rows as $row)
 		{
@@ -101,12 +100,16 @@ class Bookmarks
 			$bookmarks[] = $row;
 			
 			$count++;
-			
-			if($count >= $limit)
-			{
-				$more_data = true;
-				break;
-			}
+		}
+		
+		$total_count = $db->get_row("SELECT COUNT() AS count FROM bookmarks");
+		
+		$more_data = false;
+		
+		// Check if there is still more bookmarks
+		if($total_count["count"] > $count)
+		{
+			$more_data = true;
 		}
 		
 		return array("more" => $more_data,

@@ -122,35 +122,6 @@ Bookmarks.fetch = function()
 	request_data);
 }
 
-/*
- * @todo Write
- */
-Bookmarks.fetch_single = function(bookmark_id)
-{
-	var request_data = {
-						get_bookmark: 1
-						};
-	
-	Server.send_request(function(response)
-	{
-		Bookmarks.more = response.more;
-		Bookmarks.count = response.result_count;
-		Bookmarks.bookmarks = Array();
-		
-		var count = response.bookmarks.length;
-		
-		for(var i=0; i < count; i++)
-		{
-			var bookmark = new Bookmark();
-			bookmark.load(response.bookmarks[i]);
-			Bookmarks.bookmarks.push(bookmark);
-		}
-		
-		Bookmarks.display();
-	},
-	request_data);
-}
-
 /**
  * Queries for latest id. If newer bookmarks exist, update screen
  * 
@@ -218,12 +189,7 @@ Bookmarks.display = function()
 
 		html += '</tbody></table>';
 		
-		html += '<a rel="bookmark_ending"></a>';
-
-		if(Bookmarks.more)
-		{
-			html += '<button class="more btn btn-info btn-block">View More</button><br />';
-		}
+		html += '<a id="bookmark_ending" rel="bookmark_ending"></a>';
 	}
 	else
 	{
@@ -234,15 +200,16 @@ Bookmarks.display = function()
 	Display.set_main(html);
 	
 	/**
-	 * Handles more bookmarks button
+	 * Loads more bookmarks when bottom of page is reached
 	 */
-	$(".more").click(
-	function(e)
+	$("#bookmark_ending").waypoint(function()
 	{
-		e.preventDefault();
-		Bookmarks.limit = Bookmarks.limit + 100;
-		Bookmarks.fetch();
-	});
+		if(Bookmarks.more)
+		{
+			Bookmarks.limit = Bookmarks.limit + 100;
+			Bookmarks.fetch();
+		}
+	}, { offset: '-25%' });
 	
 	/**
 	 * Handles remove bookmark button
