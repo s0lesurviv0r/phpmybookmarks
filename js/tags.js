@@ -28,6 +28,8 @@ Tag_Editor.add_tag = function(tag)
 			'onclick="Tag_Editor.delete_tag(\'' + tag + '\')" ' +
 			'class="label remove_tag">' +
 			tag + '</span>&nbsp;');
+
+	Tag_Editor.focus();
 }
 
 Tag_Editor.display = function(bookmark_id, title, tags)
@@ -74,6 +76,11 @@ Tag_Editor.clear = function()
 	Tag_Editor.bookmark_id = undefined;
 }
 
+Tag_Editor.focus = function()
+{
+	$("#search-tags").focus();
+}
+
 Tag_Editor.get_input = function()
 {
 	return $("#search-tags").val();
@@ -81,7 +88,7 @@ Tag_Editor.get_input = function()
 
 Tag_Editor.clear_input = function()
 {
-	return $("#search-tags").val("");
+	$("#search-tags").val("");
 }
 
 Tag_Editor.set_bookmark_id = function(bookmark_id)

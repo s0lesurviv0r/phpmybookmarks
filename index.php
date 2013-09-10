@@ -127,10 +127,11 @@ else
 			<strong id="bookmark_title"></strong><br /><br />
 			Tags (Click to delete)
 			<div id="bookmark_tags"></div><br />
-			<form class="form-inline">
+			<form class="form-inline" id="tag_form">
 				<input class="input-block-level type="text" id="search-tags" 
-						class="typeahead" placeholder="Tag to add" />
+						class="typeahead" placeholder="Tag to add" autocomplete="off" />
 			</form>
+			<br /><br /><br /><br />
 		</div>
 		<div class="modal-footer">
 			<button class="btn" type="button" id="add_tag">

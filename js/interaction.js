@@ -155,6 +155,20 @@ $(function()
 		}
 	});
 	
+	// Focus on input when tag editor is displayed
+	$("#tag_dialog").on('shown', function()
+	{
+		Tag_Editor.focus();
+		
+		// Interrupt form submit and instead add tag
+		$("#tag_form").submit(function(e)
+		{
+			$("#add_tag").click();
+			return false;
+		});
+	});
+	
+	
 	$("#add_tag").click(function()
 	{
 		var bookmark_id = Tag_Editor.get_bookmark_id();
