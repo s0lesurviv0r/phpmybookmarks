@@ -161,34 +161,34 @@ $(function()
 	$("#tag_dialog").on('shown', function()
 	{
 		Tag_Editor.focus();
+	});
+	
+	// Interrupt form submit and instead add tag
+	$("#tag_form").bind("submit", function(e)
+	{
+		var bookmark_id = Tag_Editor.get_bookmark_id();
+		var tag = Tag_Editor.get_input();
 		
-		// Interrupt form submit and instead add tag
-		$("#tag_form").submit(function(e)
-		{
-			var bookmark_id = Tag_Editor.get_bookmark_id();
-			var tag = Tag_Editor.get_input();
-			
-			var request_data = {
-					bookmark_id: bookmark_id,
-					tag: tag,
-					action: "add_tag"
-					};
+		var request_data = {
+				bookmark_id: bookmark_id,
+				tag: tag,
+				action: "add_tag"
+				};
 
-			Server.send_request(function(response)
-			{
-				// Clear tag input
-				Tag_Editor.clear_input();
-				
-				// Add tag to list in editor
-				Tag_Editor.add_tag(response.tag);
-				
-				// Update bookmarks display
-				Bookmarks.fetch();
-			},
-			request_data);
+		Server.send_request(function(response)
+		{
+			// Clear tag input
+			Tag_Editor.clear_input();
 			
-			return false;
-		});
+			// Add tag to list in editor
+			Tag_Editor.add_tag(response.tag);
+			
+			// Update bookmarks display
+			Bookmarks.fetch();
+		},
+		request_data);
+		
+		return false;
 	});
 	
 	$("#done_tagging").click(function(e)
