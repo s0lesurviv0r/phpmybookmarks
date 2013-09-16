@@ -182,6 +182,25 @@ if(User::is_logged_in())
 			$response["data"] = $bookmarks;
 		}
 	}
+	else if($_REQUEST["action"] == "get_bookmark" &&
+			isset($_REQUEST["bookmark_id"]))
+	{
+		$bookmark_id = intval($_REQUEST["bookmark_id"]);
+		
+		$bookmark = Bookmarks::get_bookmark($bookmark_id);
+	
+		if($bookmark == false)
+		{
+			$response["success"] = false;
+			$response["reason"] = "db_error";
+			$response["reason_readable"] = "Database Error";
+		}
+		else
+		{
+			$response["success"] = true;
+			$response["data"] = $bookmark;
+		}
+	}
 	else if($_REQUEST["action"] == "get_tags")
 	{
 		$tags = Tags::get_all_tags();

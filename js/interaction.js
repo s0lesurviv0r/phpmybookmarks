@@ -113,7 +113,8 @@ $(function()
 	 * Typeahead feature for search field
 	 */	
 	$("#search-titles").typeahead(
-	{	
+	{
+		minLength: 3,
 		source: function(query, process)
 		{
 			var id = "search-titles";
@@ -136,7 +137,8 @@ $(function()
 	 * Typeahead feature for add new tag field
 	 */	
 	$("#search-tags").typeahead(
-	{	
+	{
+		items: 4,
 		source: function(query, process)
 		{
 			var id = "search-tags";
@@ -163,35 +165,30 @@ $(function()
 		// Interrupt form submit and instead add tag
 		$("#tag_form").submit(function(e)
 		{
-			$("#add_tag").click();
+			var bookmark_id = Tag_Editor.get_bookmark_id();
+			var tag = Tag_Editor.get_input();
+			
+			var request_data = {
+					bookmark_id: bookmark_id,
+					tag: tag,
+					action: "add_tag"
+					};
+
+			Server.send_request(function(response)
+			{
+				// Clear tag input
+				Tag_Editor.clear_input();
+				
+				// Add tag to list in editor
+				Tag_Editor.add_tag(response.tag);
+				
+				// Update bookmarks display
+				Bookmarks.fetch();
+			},
+			request_data);
+			
 			return false;
 		});
-	});
-	
-	
-	$("#add_tag").click(function()
-	{
-		var bookmark_id = Tag_Editor.get_bookmark_id();
-		var tag = Tag_Editor.get_input();
-		
-		var request_data = {
-				bookmark_id: bookmark_id,
-				tag: tag,
-				action: "add_tag"
-				};
-
-		Server.send_request(function(response)
-		{
-			// Clear tag input
-			Tag_Editor.clear_input();
-			
-			// Add tag to list in editor
-			Tag_Editor.add_tag(response.tag);
-			
-			// Update bookmarks display
-			Bookmarks.fetch();
-		},
-		request_data);
 	});
 	
 	$("#done_tagging").click(function(e)

@@ -1,0 +1,3 @@
+v.0.1.1 (2013-09-16)
+	* Different types of tags are available using prefixes
+	* Tag input is more intuitive (auto focus on input, enter button support)

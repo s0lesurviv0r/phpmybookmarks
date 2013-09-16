@@ -23,7 +23,7 @@ class Version
 {
 	private static $major = 0;
 	private static $minor = 1;
-	private static $revision = 0;
+	private static $revision = 1;
 	
 	public static function to_string()
 	{

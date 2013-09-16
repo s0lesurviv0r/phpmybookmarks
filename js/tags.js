@@ -22,26 +22,44 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 function Tag_Editor() {}
 
 Tag_Editor.add_tag = function(tag)
-{
+{	
 	$("#bookmark_tags").append(
-			'<span id="tag_' + hex_sha1(tag) +'" ' +
+			'<span id="tag_' + hex_sha1(tag) + '" ' +
 			'onclick="Tag_Editor.delete_tag(\'' + tag + '\')" ' +
-			'class="label remove_tag">' +
-			tag + '</span>&nbsp;');
+			'class="label ' + Tags.get_tag_class(tag) + 'remove_tag">' +
+			Tags.scrub_tag(tag) + '</span>&nbsp;');
 
 	Tag_Editor.focus();
 }
 
-Tag_Editor.display = function(bookmark_id, title, tags)
+Tag_Editor.display = function(bookmark_id)
 {
-	for(var i=0; i < tags.length; i++)
+	var request_data = {
+			action: "get_bookmark",
+			bookmark_id: bookmark_id
+			};
+
+	Server.send_request(function(response)
 	{
-		Tag_Editor.add_tag(tags[i]);
-	}
-	
-	Tag_Editor.set_bookmark_id(bookmark_id);
-	$("#bookmark_title").html(title);
-	$("#tag_dialog").modal();
+		tags = response.tags;
+		title = response.title;
+		bookmark_id = response.id;
+		
+		for(var i=0; i < tags.length; i++)
+		{
+			Tag_Editor.add_tag(tags[i]);
+		}
+		
+		$("#tag_prefixes").html("");
+		$("#tag_prefixes").append(Tags.get_html("__") + "&nbsp");
+		$("#tag_prefixes").append(Tags.get_html("??") + "&nbsp");
+		$("#tag_prefixes").append(Tags.get_html("**") + "&nbsp");
+		
+		Tag_Editor.set_bookmark_id(bookmark_id);
+		$("#bookmark_title").html(title);
+		$("#tag_dialog").modal();
+	},
+	request_data);
 }
 
 Tag_Editor.delete_tag = function(tag)
@@ -104,6 +122,48 @@ Tag_Editor.get_bookmark_id = function()
 function Tags()
 { }
 
+// Returns css class of tag
+Tags.get_tag_class = function(tag)
+{
+	var first_char = tag[0];
+	var css_class = "";
+	
+	if(first_char == "_")
+	{
+		css_class = "label-important ";
+	}
+	else if(first_char == "?")
+	{
+		css_class = "label-success ";
+	}
+	else if(first_char == "*")
+	{
+		css_class = "label-info ";
+	}
+	
+	return css_class;
+}
+
+// Remove special char from tag (make suitable for display)
+Tags.scrub_tag = function(tag)
+{
+	var first_char = tag[0];
+	var special_char = ["_", "?", "*"];
+	
+	if(special_char.in_array(first_char, false))
+	{
+		tag = tag.substr(1);
+	}
+
+	return tag;
+}
+
+Tags.get_html = function(tag, css_class)
+{
+	return "<span tag=\"" + tag + "\" class=\"label " + Tags.get_tag_class(tag) + css_class + "\">" +
+				Tags.scrub_tag(tag) + "</span>";
+}
+
 Tags.display = function()
 {
 	Tags.min_font = 14;
@@ -152,7 +212,7 @@ Tags.display = function()
 			font_size = Math.round(weight*conversion) + intercept;
 			
 			html += '<a class="tag" style="font-size:' + font_size + 'px;" ' +
-							'id="tag_' + tag + '" href="#">' + tag + '</a> ';
+							'tag="' + tag + '" href="#">' + tag + '</a> ';
 		}
 		
 		Display.set_main(html);
@@ -163,7 +223,7 @@ Tags.display = function()
 		$(".tag").click(function(e)
 		{
 			e.preventDefault();
-			tag = $(this).attr('id').split("_")[1];
+			tag = $(this).attr('tag');
 			Bookmarks.tags.push(tag);
 			Bookmarks.fetch();
 		});

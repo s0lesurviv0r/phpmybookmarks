@@ -63,6 +63,7 @@ class Bookmarks
 		$db = new SQLite3_DB();
 		$sql = "SELECT * FROM bookmarks WHERE id = " . intval($id);
 		$row = $db->get_row($sql);
+		$row["tags"] = Tags::get_tags($id);
 		return $row;
 	}
 	

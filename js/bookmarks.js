@@ -52,8 +52,7 @@ Bookmark.prototype.get_html = function()
 	
 	for(var i=0; i < this.tags.length; i++)
 	{
-		html += "&nbsp;&nbsp;<a class=\"label tag\">" +
-					this.tags[i] + "</a>";
+		html += "&nbsp;&nbsp;" + Tags.get_html(this.tags[i], "tag");
 	}
 	
 	html += '</td>';
@@ -161,7 +160,7 @@ Bookmarks.display = function()
 
 		if(Bookmarks.search != "")
 		{
-			html += "<a class=\"label label-info clear-search\">" +
+			html += "<a class=\"label clear-search\">" +
 				"Search: " +
 				Bookmarks.search + "</a>&nbsp;&nbsp;";
 		}
@@ -170,8 +169,7 @@ Bookmarks.display = function()
 		{
 			for(var i=0; i < this.tags.length; i++)
 			{
-				html += "<a class=\"label clear-tag\">" +
-							this.tags[i] + "</a>&nbsp;&nbsp;";
+				html += Tags.get_html(this.tags[i], "clear-tag") + "&nbsp;&nbsp;";
 			}
 		}
 		
@@ -248,24 +246,7 @@ Bookmarks.display = function()
 		// Get id of bookmark
 		bookmark_id = $(this).attr('id').split("_")[2];
 		
-		/*
-		 * Get bookmark title
-		 * @todo This can be a lot more flexible and cleaner somehow
-		 */
-		bookmark_title = $(this).parent("td").children(".title").html();
-		
-		var tags = Array();
-		
-		/*
-		 * Get bookmarks tags
-		 * @todo This can be a lot more flexible and cleaner somehow
-		 */
-		$(this).parent("td").children(".tag").each(function()
-		{
-			tags.push($(this).html());
-		});
-		
-		Tag_Editor.display(bookmark_id, bookmark_title, tags);
+		Tag_Editor.display(bookmark_id);
 	});
 	
 	/**
@@ -275,7 +256,7 @@ Bookmarks.display = function()
 	{
 		e.preventDefault();
 
-		tag = $(this).html();
+		tag = $(this).attr("tag");
 		
 		if(!Bookmarks.tags.in_array(tag, false))
 		{
@@ -291,7 +272,7 @@ Bookmarks.display = function()
 	{
 		e.preventDefault();
 
-		tag = $(this).html();
+		tag = $(this).attr("tag");
 		
 		if(Bookmarks.tags.in_array(tag, false))
 		{

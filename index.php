@@ -107,7 +107,7 @@ else
 				<input type="text" id="add-url" placeholder="Add a URL here" />
 				<button class="btn" type="button" id="add"><i class="icon-plus"></i></button>
 				
-				<input type="text" class="typeahead" id="search-titles" placeholder="Search" />
+				<input type="text" class="typeahead" id="search-titles" placeholder="Search" autocomplete="off" />
 				<button class="btn" type="button" id="search"><i class="icon-search"></i></button>
 				
 				<?php if(Config::$auth != "none") { ?>
@@ -126,17 +126,18 @@ else
 	aria-hidden="true">
 		<div class="modal-body">
 			<strong id="bookmark_title"></strong><br /><br />
-			Tags (Click to delete)
+			<small>Prefixes</small>
+			<div id="tag_prefixes"></div><br />
+			
+			<small>Current Tags (Click to delete)</small>
 			<div id="bookmark_tags"></div><br />
 			<form class="form-inline" id="tag_form">
 				<input class="input-block-level type="text" id="search-tags" 
 						class="typeahead" placeholder="Tag to add" autocomplete="off" />
 			</form>
-			<br /><br /><br /><br />
+			<br /><br /><br /><br /><br /><br /><br /><br />
 		</div>
 		<div class="modal-footer">
-			<button class="btn" type="button" id="add_tag">
-				<i class="icon-plus"></i> Add Tag</button>
 			<button id="done_tagging" class="btn" data-dismiss="modal" 
 			aria-hidden="true">Done</button>
 		</div>
