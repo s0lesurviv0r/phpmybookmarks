@@ -18,8 +18,12 @@ This is a public user version. Config::$auth is set to "none".
 Installation
 ------------
 
-Place phpbookmarks source into a folder in your web root.
+Place phpmybookmarks source into a folder in your web root.
 
 Make appropriate changes to config.inc.php.
+
+Make folder containing phpmybookmarks writeable by executing the following while inside the folder:
+
+    $ chmod g+w .
 
 Point your browser to index.php. Database will be automatically created. If you selected $auth = "user" then you will be prompted to enter login details to create a new user.
